@@ -21,9 +21,9 @@
     {
       "name": "Jose Norberto SANCHEZ",
       "email": "josensanchez@gmail.com"
-    }
-  ],
-  "minimum-stability": "stable",
+        }
+    ],
+    "minimum-stability": "dev",
     "extra": {
         "laravel": {
             "providers": [
@@ -32,8 +32,8 @@
     }
   },
   "scripts": {
-    "test": "phpunit",
-    "format": "php-cs-fixer fix --allow-risky=yes",
+      "test": "pest",
+      "format": "php-cs-fixer fix --allow-risky=yes",
     "analyse": "phpstan analyse"
   },
   "config": {
