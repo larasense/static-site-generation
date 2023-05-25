@@ -1,0 +1,44 @@
+{
+  "name": "larasense/static-site-generation",
+  "description": "define routes in your application with content that can be static generated either for performance issues or for simplicity.",
+  "type": "library",
+  "require": {
+    "illuminate/support": "^10.12"
+  },
+  "require-dev": {
+    "orchestra/testbench": "^8.5",
+    "nunomaduro/larastan": "^2.6",
+    "pestphp/pest": "^2.6",
+    "laravel/pint": "^1.10"
+  },
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Larasense\\StaticSiteGeneration\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Jose Norberto SANCHEZ",
+      "email": "josensanchez@gmail.com"
+    }
+  ],
+  "minimum-stability": "stable",
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Larasense\\StaticSiteGeneration\\StaticSiteGenerationServiceProvider"
+      ]
+    }
+  },
+  "scripts": {
+    "test": "phpunit",
+    "format": "php-cs-fixer fix --allow-risky=yes",
+    "analyse": "phpstan analyse"
+  },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
+  }
+}
