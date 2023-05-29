@@ -3,7 +3,8 @@
   "description": "define routes in your application with content that can be static generated either for performance issues or for simplicity.",
   "type": "library",
   "require": {
-    "illuminate/support": "^10.12"
+    "illuminate/support": "^10.12",
+    "spatie/laravel-ignition": "dev-main"
   },
   "require-dev": {
     "orchestra/testbench": "^8.5",
