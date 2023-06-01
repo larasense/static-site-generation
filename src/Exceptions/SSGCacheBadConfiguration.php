@@ -2,12 +2,11 @@
 
 namespace Larasense\StaticSiteGeneration\Exceptions;
 
-use Exception;
 use Spatie\Ignition\Contracts\Solution;
 use Spatie\Ignition\Contracts\BaseSolution;
 use Spatie\Ignition\Contracts\ProvidesSolution;
 
-class SSGCacheBadConfiguration extends Exception implements ProvidesSolution
+class SSGCacheBadConfiguration extends SSGException implements ProvidesSolution
 {
     public function getSolution(): Solution
     {

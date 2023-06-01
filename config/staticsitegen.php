@@ -17,7 +17,7 @@ return [
     'cached' => env('SSG_CACHE_ENABLED', false),
     'remember' => env('SSG_CACHE_REMEMBER', 60*60), // 1HR
 
-    'storage_name' => env('SSG_STORAGE_NAME', 'static_generated_files'),
+    'storage_name' => env('SSG_STORAGE_NAME', 'ssg:store'),
 
 ];
 

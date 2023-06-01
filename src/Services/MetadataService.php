@@ -8,6 +8,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route as RouteFacade;
 use Illuminate\Support\Str;
 use Larasense\StaticSiteGeneration\Attributes\SSG;
+use Larasense\StaticSiteGeneration\DTOs\Page;
 use ReflectionClass;
 use ReflectionAttribute;
 
@@ -15,26 +16,33 @@ class MetadataService
 {
     /**
      *
-     * @return bool|array{uri:string,'controller':string,'method':string,'path?':string}
-     * @phpstan-return bool|array{uri:string,'controller':string,'method':string,'path?':string}
+     * @phpstan-return bool|Page
      */
-    public function get(Route $route): bool | array
+    public function get(Route|string|null $route): bool | Page
     {
+        if (!$route instanceof Route){
+            return false;
+        }
+
         $attributes = $this->getAttributes($route);
 
         if (count($attributes) == 0) {
             return false;
         }
 
-        [$controller, $name] = explode('@', $route->action['controller']);
+        if ($request->getMethod() !== 'GET' || !is_null($request->header('sgg-no-cache'))) {
+            return false;
+        }
 
-        /** @phpstan-ignore-next-line */
-        return [
-            'uri' => '/'. $route->uri,
-            'controller' => $controller,
-            'method' => $name,
-            ...($attributes[0])->getArguments(),
-        ];
+        [$controller, $name] = explode('@', $route->action['controller']);
+        // SSG metadata found
+
+
+        return (new Page(
+            uri:        $route->uri,
+            controller: $controller,
+            method:     $name,
+        ))->setAttribute($attributes[0]);
     }
 
     /**

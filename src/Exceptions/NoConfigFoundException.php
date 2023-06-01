@@ -2,12 +2,11 @@
 
 namespace Larasense\StaticSiteGeneration\Exceptions;
 
-use Exception;
 use Spatie\Ignition\Contracts\RunnableSolution;
 use Larasense\StaticSiteGeneration\Solutions\RunVendorPublishSolution;
 use Spatie\Ignition\Contracts\ProvidesSolution;
 
-class NoConfigFoundException extends Exception implements ProvidesSolution
+class NoConfigFoundException extends SSGException implements ProvidesSolution
 {
     public function __construct()
     {

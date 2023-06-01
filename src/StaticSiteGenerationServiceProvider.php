@@ -10,6 +10,8 @@ use Larasense\StaticSiteGeneration\Console\Commands\SetCacheDriverToRedisCommand
 use Larasense\StaticSiteGeneration\Facades\Metadata;
 use Larasense\StaticSiteGeneration\Http\Middleware\SSGMiddleware;
 use Illuminate\Routing\Route;
+use Larasense\StaticSiteGeneration\Solutions\Providers\StaticSiteGenerationSolutionProvider;
+use Spatie\Ignition\Contracts\SolutionProviderRepository;
 
 final class StaticSiteGenerationServiceProvider extends ServiceProvider
 {
@@ -26,6 +28,8 @@ final class StaticSiteGenerationServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../config/staticsitegen.php' => config_path('staticsitegen.php')
         ], 'staticsitegen-config');
+
+        $this->app->make(SolutionProviderRepository::class)->registerSolutionProvider(StaticSiteGenerationSolutionProvider::class);
 
         $this->loadAll();
     }

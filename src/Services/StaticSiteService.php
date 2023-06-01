@@ -4,8 +4,9 @@ namespace Larasense\StaticSiteGeneration\Services;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Routing\Route;
+use Larasense\StaticSiteGeneration\Exceptions\StorageNotFoundException;
 use Larasense\StaticSiteGeneration\Facades\Metadata;
+use Larasense\StaticSiteGeneration\Exceptions\BadCacheConfigException;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Response as ResponseFacade;
@@ -13,18 +14,20 @@ use Larasense\StaticSiteGeneration\Jobs\ProcessStaticContent;
 
 class StaticSiteService
 {
-    public function get(Request $request): bool | Response
+    public function checkEnvironment(Request $request):bool
     {
-        $route = $request->route();
-        if (!$route instanceof Route){
+        return $this->isRequestOk($request) &&
+               $this->isCacheOk() &&
+               $this->isStorageOk();
+    }
+
+    public function get(Request $request): false | Response
+    {
+        if (!$this->checkEnvironment($request)){
             return false;
         }
-        $metadata = Metadata::get($route);
-        if (!$metadata) {
-            return false;
-        }
-        // SSG metadata found
-        if ($request->getMethod() !== 'GET' || !is_null($request->header('sgg-no-cache'))) {
+
+        if (!$metadata = Metadata::get($request->route())) {
             return false;
         }
 
@@ -118,6 +121,26 @@ class StaticSiteService
             $content = Storage::disk('html')->get($filename);
             return $content;
         });
+    }
+
+    protected function isRequestOk(Request $request): bool
+    {
+        if ($request->getMethod() !== 'GET' || !is_null($request->header('sgg-no-cache'))) {
+            return false;
+        }
+        return true;
+    }
+
+    protected function isCacheOk(): bool
+    {
+        return config('cache.driver') === 'file' ? throw_if(!app()->environment('production'), BadCacheConfigException::class) : true;
+    }
+
+    private function isStorageOk(): bool
+    {
+        $storage_name = config('staticsitegen.storage_name');
+        return null === config("filesystems.disks.$storage_name") ? throw_if(!app()->environment('production'), StorageNotFoundException::class, $storage_name): true;
+
     }
 
 }
