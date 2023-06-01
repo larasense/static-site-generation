@@ -17,7 +17,7 @@ class Page
         public readonly string $method,
         public ?string $path = null,
         public string|array $urls = '',
-        public ?PageFile $file = null
+        public ?FileInfo $file = null
     ){}
 
     /**

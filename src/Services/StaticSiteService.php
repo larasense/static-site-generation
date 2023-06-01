@@ -5,7 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
 use Larasense\StaticSiteGeneration\DTOs\Page;
-use Larasense\StaticSiteGeneration\DTOs\PageFile;
+use Larasense\StaticSiteGeneration\DTOs\FileInfo;
 use Larasense\StaticSiteGeneration\Exceptions\StorageNotFoundException;
 use Larasense\StaticSiteGeneration\Facades\Metadata;
 use Larasense\StaticSiteGeneration\Exceptions\BadCacheConfigException;
@@ -97,7 +97,7 @@ class StaticSiteService
     }
 
 
-    protected function getFileInfo(Request $request): PageFile
+    protected function getFileInfo(Request $request): FileInfo
     {
         $extention = $request->header('X-Inertia') !== 'true' ? 'html' : 'json';
         $pathParts = explode('/', trim($request->getPathInfo(), '/'));
@@ -105,13 +105,13 @@ class StaticSiteService
         $file = (strlen($filePart) ? $filePart : "index") . '.' . $extention;
         $relativePath = implode("/", $pathParts);
 
-        return new PageFile(
+        return new FileInfo(
             filename: $relativePath . "/" . $file,
             extention: $extention
         );
     }
 
-    protected function getContent(PageFile $file_info): string|bool|null
+    protected function getContent(FileInfo $file_info): string|bool|null
     {
         /** @var int */
         $seconds = config('staticsitegen.remember');

@@ -2,7 +2,7 @@
 
 namespace Larasense\StaticSiteGeneration\DTOs;
 
-class PageFile
+class FileInfo
 {
     public function __construct(
         public readonly string $filename,
