@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Larasense\StaticSiteGeneration\Services;
 
 use Illuminate\Routing\Route;
@@ -40,7 +42,7 @@ class MetadataService
      * in the middleware and in the commands to know if
      * the route needs to be stored in files or not.
      *
-     * @return Collection<int,array{'uri':string,'controller':string,'method':string,'path':string|null}>
+     * @return Collection<int,array{'uri':string,'controller':string,'method':string,'path':?string}>
      */
     public function all(): Collection
     {
@@ -59,6 +61,9 @@ class MetadataService
      */
     public function routes(): Collection
     {
+        if(!count(RouteFacade::getRoutes()->getRoutesByMethod())){
+            return collect([]);
+        }
         /** @phpstan-ignore-next-line */
         return collect(RouteFacade::getRoutes()->getRoutesByMethod()['GET'])
             ->filter(fn(Route $route) => $this->hasAttributes($route))

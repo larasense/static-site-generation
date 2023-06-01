@@ -3,10 +3,8 @@
 namespace Larasense\StaticSiteGeneration\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
-use Larasense\StaticSiteGeneration\Jobs\ProcessStaticContent;
-use Larasense\StaticSiteGeneration\Facades\Stalled;
+use Larasense\StaticSiteGeneration\Facades\StaticSite;
 
 class GenerateStaticSite extends Command
 {
@@ -29,16 +27,16 @@ class GenerateStaticSite extends Command
      */
     public function handle():void
     {
-        $urls = Stalled::urls();
-        //
+        $urls = StaticSite::urls();
+        $output = $this->output;
 
-        $this->output->progressStart(count($urls));
+        $output->progressStart(count($urls));
         //TODO: delete all files before recreating htmls and jsons
         foreach ($urls as $url) {
             $content = Http::get($url)->body();
-            $this->output->progressAdvance();
+            $output->progressAdvance();
         }
-        $this->output->progressFinish();
+        $output->progressFinish();
         $this->info("Pages Generated");
     }
 }

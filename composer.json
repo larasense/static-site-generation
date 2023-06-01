@@ -4,7 +4,7 @@
   "type": "library",
   "require": {
     "illuminate/support": "^10.12",
-    "spatie/laravel-ignition": "dev-main"
+    "spatie/laravel-ignition": "^2.0"
   },
   "require-dev": {
     "orchestra/testbench": "^8.5",
@@ -22,19 +22,19 @@
     {
       "name": "Jose Norberto SANCHEZ",
       "email": "josensanchez@gmail.com"
-        }
-    ],
-    "minimum-stability": "dev",
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Larasense\\StaticSiteGeneration\\StaticSiteGenerationServiceProvider"
+    }
+  ],
+  "minimum-stability": "dev",
+  "extra": {
+    "laravel": {
+      "dont-discover": [
+        "*"
       ]
     }
   },
   "scripts": {
-      "test": "pest",
-      "format": "php-cs-fixer fix --allow-risky=yes",
+    "test": "pest",
+    "format": "php-cs-fixer fix --allow-risky=yes",
     "analyse": "phpstan analyse"
   },
   "config": {

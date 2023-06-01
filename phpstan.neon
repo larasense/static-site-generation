@@ -7,7 +7,5 @@ parameters:
     paths:
         - src
 
-    stubFiles:
-        - stubs/RouteCollectionInterface.stub
     ignoreErrors:
         - "#Cannot access offset 'config' on [a-zA-Z0-9_]+#"
