@@ -7,13 +7,17 @@ use ReflectionAttribute;
 
 class Page
 {
+    /**
+     *
+     * @param string|array<int,string> $urls
+     */
     public function __construct(
         public readonly string $uri,
         public readonly string $controller,
         public readonly string $method,
         public ?string $path = null,
-        public string|array $urls,
-        public ?PageFile $file
+        public string|array $urls = '',
+        public ?PageFile $file = null
     ){}
 
     /**
@@ -32,7 +36,7 @@ class Page
     {
         switch ($name) {
             case 'is_path_needed':
-                return str($this->uri)->contains("{") && !$this->path;
+                return str($this->uri)->contains("{") && !$this->path;  /** @phpstan-ignore-line */
         }
         return null;
     }

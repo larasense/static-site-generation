@@ -14,11 +14,7 @@ use ReflectionAttribute;
 
 class MetadataService
 {
-    /**
-     *
-     * @phpstan-return bool|Page
-     */
-    public function get(Route|string|null $route): bool | Page
+    public function get(Route|string|null $route): Page | false
     {
         if (!$route instanceof Route){
             return false;
@@ -30,14 +26,7 @@ class MetadataService
             return false;
         }
 
-        if ($request->getMethod() !== 'GET' || !is_null($request->header('sgg-no-cache'))) {
-            return false;
-        }
-
         [$controller, $name] = explode('@', $route->action['controller']);
-        // SSG metadata found
-
-
         return (new Page(
             uri:        $route->uri,
             controller: $controller,
@@ -50,7 +39,7 @@ class MetadataService
      * in the middleware and in the commands to know if
      * the route needs to be stored in files or not.
      *
-     * @return Collection<int,array{'uri':string,'controller':string,'method':string,'path':?string}>
+     * @return Collection<int,Page>
      */
     public function all(): Collection
     {

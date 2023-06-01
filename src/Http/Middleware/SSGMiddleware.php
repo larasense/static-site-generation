@@ -4,7 +4,7 @@ namespace Larasense\StaticSiteGeneration\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\Response;
 use Larasense\StaticSiteGeneration\Facades\StaticSite;
 
 class SSGMiddleware

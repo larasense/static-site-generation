@@ -27,7 +27,9 @@ class ProcessStaticContent implements ShouldQueue
     public function handle(): void
     {
 
-        Storage::disk('html')->put(
+        /** @var string */
+        $disk = config('staticsitegen.storage_name');
+        Storage::disk($disk)->put(
             $this->path,
             $this->content,
             ['CacheControl' => 'public,max-age=60,no-transform']

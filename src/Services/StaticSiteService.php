@@ -4,6 +4,8 @@ namespace Larasense\StaticSiteGeneration\Services;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
+use Larasense\StaticSiteGeneration\DTOs\Page;
+use Larasense\StaticSiteGeneration\DTOs\PageFile;
 use Larasense\StaticSiteGeneration\Exceptions\StorageNotFoundException;
 use Larasense\StaticSiteGeneration\Facades\Metadata;
 use Larasense\StaticSiteGeneration\Exceptions\BadCacheConfigException;
@@ -31,17 +33,17 @@ class StaticSiteService
             return false;
         }
 
-        [$filename, $extention] = $this->getFileInfo($request);
-        $content = $this->getContent($filename, $extention);
+        $metadata->file = $this->getFileInfo($request);
+        $content = $this->getContent($metadata->file);
 
         if (!$content) {
             return false;
         }
 
         $response = ResponseFacade::make($content, Response::HTTP_OK);
-        $response->header('Content-Type', $extention === 'html' ? 'text/html' : 'application/json');
+        $response->header('Content-Type', $metadata->file->extention === 'html' ? 'text/html' : 'application/json');
         $response->header('X-SSG', 'true');
-        if ($extention == 'json'){
+        if ($metadata->file->extention == 'json'){
             $response->header('X-Inertia', 'true');
         }
         return $response;
@@ -50,24 +52,24 @@ class StaticSiteService
 
     /**
      *
-     * @return array{array{'uri':string,'path':?string,'controller':string,'method':string,'urls':string|array<int,string>}}
+     * @return array<int,Page>
      */
     public function all(): array
     {
         /** @phpstan-ignore-next-line */
         return Metadata::all()
-            ->map(function($metadata){
-                if(isset($metadata['path'])){
-                    $class = $metadata['controller'];
-                    $path = $metadata['path'];
+            ->map(function(Page $metadata){
+                if(isset($metadata->path)){
+                    $class = $metadata->controller;
+                    $path = $metadata->path;
                     $arguments = $class::$path();
                     $paths = [];
                     foreach ($arguments as $argument){
-                        $paths[] = action([$metadata['controller'],$metadata['method']], $argument);
+                        $paths[] = action([$metadata->controller,$metadata->method], $argument);
                     }
-                    $metadata['urls'] = $paths;
+                    $metadata->urls = $paths;
                 } else {
-                    $metadata['urls'] = action([$metadata['controller'],$metadata['method']]);
+                    $metadata->urls = action([$metadata->controller,$metadata->method]);
                 }
                 return $metadata;
         })->toArray();
@@ -75,10 +77,11 @@ class StaticSiteService
 
     /**
      *
-     * @return array<int, mixed>
+     * @return array<int, string>
      */
     public function urls(): array
     {
+        /** @phpstan-ignore-next-line */
         return collect($this->all())->pluck('urls')->flatten()->toArray();
     }
 
@@ -86,19 +89,15 @@ class StaticSiteService
     {
         $content = $response->getContent();
         if($content){
-            [$filename, $_] = $this->getFileInfo($request);
-            ProcessStaticContent::dispatch($content, $filename);
+            $file = $this->getFileInfo($request);
+            ProcessStaticContent::dispatch($content, $file->filename);
             return false;
         }
         return true;
     }
 
 
-    /**
-     *
-     * @return array<int, string>
-     */
-    protected function getFileInfo(Request $request): array
+    protected function getFileInfo(Request $request): PageFile
     {
         $extention = $request->header('X-Inertia') !== 'true' ? 'html' : 'json';
         $pathParts = explode('/', trim($request->getPathInfo(), '/'));
@@ -106,19 +105,24 @@ class StaticSiteService
         $file = (strlen($filePart) ? $filePart : "index") . '.' . $extention;
         $relativePath = implode("/", $pathParts);
 
-        return [$relativePath . "/" . $file, $extention];
+        return new PageFile(
+            filename: $relativePath . "/" . $file,
+            extention: $extention
+        );
     }
 
-    protected function getContent(string $filename, string $extention): string
+    protected function getContent(PageFile $file_info): string|bool|null
     {
+        /** @var int */
         $seconds = config('staticsitegen.remember');
-        return Cache::remember("ssg:$filename", $seconds, function() use($filename, $extention){
-            $storate_name = config('staticsitegen.storage_name');
-            // check if file exist
-            if (!Storage::disk('html')->exists($filename)) {
+        return Cache::remember("ssg:{$file_info->filename}", $seconds, function() use($file_info){
+            /** @var string */
+            $disk = config('staticsitegen.storage_name');
+
+            if (!Storage::disk($disk)->exists($file_info->filename)) {
                 return false;
             }
-            $content = Storage::disk('html')->get($filename);
+            $content = Storage::disk($disk)->get($file_info->filename);
             return $content;
         });
     }
@@ -133,13 +137,13 @@ class StaticSiteService
 
     protected function isCacheOk(): bool
     {
-        return config('cache.driver') === 'file' ? throw_if(!app()->environment('production'), BadCacheConfigException::class) : true;
+        return config('cache.driver') === 'file' ? throw_if(!app()->environment('production'), BadCacheConfigException::class) : true; /** @phpstan-ignore-line */
     }
 
-    private function isStorageOk(): bool
+    protected function isStorageOk(): bool
     {
         $storage_name = config('staticsitegen.storage_name');
-        return null === config("filesystems.disks.$storage_name") ? throw_if(!app()->environment('production'), StorageNotFoundException::class, $storage_name): true;
+        return null === config("filesystems.disks.$storage_name") ? throw_if(!app()->environment('production'), StorageNotFoundException::class, $storage_name): true; /** @phpstan-ignore-line */
 
     }
 
