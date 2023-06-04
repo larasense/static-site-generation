@@ -34,6 +34,11 @@ class StaticSiteService
         }
 
         $metadata->file = $this->getFileInfo($request);
+
+        if ($metadata->need_revalidation){
+            return false;
+        }
+
         $content = $this->getContent($metadata->file);
 
         if (!$content) {
@@ -104,7 +109,7 @@ class StaticSiteService
 
         return new FileInfo(
             filename: implode("/", $pathParts) . "/" . (strlen($filePart) ? $filePart : "index") . '.' . $extention,
-            extention: $extention
+            extention: $extention,
         );
     }
 
