@@ -30,6 +30,10 @@ class SSGMiddleware
             return;
         }
         */
+        if (!StaticSite::checkEnvironment($request)){
+            return;
+        }
+
         if ($request->getMethod() !== 'GET' || $response->headers->get('X-SSG') === 'true') {
             return;
         }

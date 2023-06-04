@@ -47,7 +47,6 @@ class StaticSiteService
             $response->header('X-Inertia', 'true');
         }
         return $response;
-
     }
 
     /**
@@ -102,29 +101,38 @@ class StaticSiteService
         $extention = $request->header('X-Inertia') !== 'true' ? 'html' : 'json';
         $pathParts = explode('/', trim($request->getPathInfo(), '/'));
         $filePart = array_pop($pathParts);
-        $file = (strlen($filePart) ? $filePart : "index") . '.' . $extention;
-        $relativePath = implode("/", $pathParts);
 
         return new FileInfo(
-            filename: $relativePath . "/" . $file,
+            filename: implode("/", $pathParts) . "/" . (strlen($filePart) ? $filePart : "index") . '.' . $extention,
             extention: $extention
         );
     }
 
     protected function getContent(FileInfo $file_info): string|bool|null
     {
+        return config('staticsitegen.cache_enabled')
+            ? $this->getCachedFileContent($file_info)
+            : $this->getFileContent($file_info);
+    }
+
+    protected function getCachedFileContent(FileInfo $file_info): string|bool|null
+    {
         /** @var int */
         $seconds = config('staticsitegen.remember');
         return Cache::remember("ssg:{$file_info->filename}", $seconds, function() use($file_info){
+            return $this->getFileContent($file_info);
+        });
+    }
+
+    protected function getFileContent(FileInfo $file_info): string|bool|null
+    {
             /** @var string */
             $disk = config('staticsitegen.storage_name');
 
             if (!Storage::disk($disk)->exists($file_info->filename)) {
                 return false;
             }
-            $content = Storage::disk($disk)->get($file_info->filename);
-            return $content;
-        });
+            return Storage::disk($disk)->get($file_info->filename);
     }
 
     protected function isRequestOk(Request $request): bool
