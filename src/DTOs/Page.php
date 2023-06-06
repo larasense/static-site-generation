@@ -9,7 +9,7 @@ use ReflectionAttribute;
  * Information related to the Page that could be statically generated
  *
  * @property bool $is_path_needed
- * @property bool $needed_revalidation
+ * @property bool $need_revalidation
  */
 class Page
 {
@@ -47,7 +47,7 @@ class Page
         switch ($name) {
             case 'is_path_needed':
                 return str($this->uri)->contains("{") && !$this->path;  /** @phpstan-ignore-line */
-            case 'needed_revalidation':
+            case 'need_revalidation':
                 if (!$this->file){
                     return false;
                 }

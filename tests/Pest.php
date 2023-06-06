@@ -11,7 +11,7 @@
 |
 */
 
-// uses(Tests\TestCase::class)->in('Feature');
+uses(Larasense\StaticSiteGeneration\Tests\TestCase::class)->in('Feature');
 
 /*
 |--------------------------------------------------------------------------
