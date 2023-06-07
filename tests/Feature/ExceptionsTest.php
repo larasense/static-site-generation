@@ -28,8 +28,6 @@ it('should throw BadCacheConfigException', function(){
 })->throws(BadCacheConfigException::class);
 
 
-
-
 it('should call the $next function', function(){
     Metadata::shouldReceive('get')
          ->andReturn(false);
