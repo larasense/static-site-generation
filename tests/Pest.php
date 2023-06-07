@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Config;
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -11,7 +13,12 @@
 |
 */
 
-uses(Larasense\StaticSiteGeneration\Tests\TestCase::class)->in('Feature');
+uses(Larasense\StaticSiteGeneration\Tests\TestCase::class)
+    ->beforeEach(function(){
+      Config::set('filesystems.disks.ssg:store', ['driver'=>'file', 'root'=>'/tmp', 'throw' => false]);
+    })
+    ->group('features')
+    ->in('Feature');
 
 /*
 |--------------------------------------------------------------------------
