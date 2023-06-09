@@ -38,7 +38,7 @@ class DisableCacheSolution implements RunnableSolution
 
     public function run(array $parameters = []):void
     {
-        Artisan::call('ssg:disable-cache');
+        Artisan::call('static:disable-cache');
     }
 
     public function getRunParameters(): array

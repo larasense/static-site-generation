@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Larasense\StaticSiteGeneration\Facades\StaticSite;
 
-class GenerateStaticSite extends Command
+class GenerateStaticSiteCommand extends Command
 {
     /**
      * The name and signature of the console command.
@@ -33,7 +33,8 @@ class GenerateStaticSite extends Command
         $output->progressStart(count($urls));
         //TODO: delete all files before recreating htmls and jsons
         foreach ($urls as $url) {
-            $content = Http::get($url)->body();
+            Http::get($url);
+            Http::withHeaders(['X-Inertia' => 'true'])->get($url);
             $output->progressAdvance();
         }
         $output->progressFinish();

@@ -46,7 +46,21 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+
+use Larasense\StaticSiteGeneration\Tests\Stubs\Controllers\{TestPathController, TestRevalidateController};
+use Illuminate\Support\Facades\Route;
+use Larasense\StaticSiteGeneration\Http\Middleware\SSGMiddleware;
+
+function artisan(string $command)
 {
-    // ..
+    return test()->artisan($command);
+}
+
+function registerRoutes()
+{
+    $routes = [
+         Route::get('/show/{id}', [TestPathController::class, 'show'])->middleware(SSGMiddleware::class),
+         Route::get('/', [TestRevalidateController::class, 'index'])->middleware(SSGMiddleware::class),
+    ];
+    return $routes;
 }

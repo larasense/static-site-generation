@@ -4,6 +4,8 @@ namespace Larasense\StaticSiteGeneration\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
+use Facades\Larasense\StaticSiteGeneration\Services\File;
+
 
 class SetCacheDriverToRedisCommand extends Command
 {
@@ -13,7 +15,7 @@ class SetCacheDriverToRedisCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'ssg:set-cache';
+    protected $signature = 'static:set-cache';
 
     /**
      * The console command description.
@@ -25,15 +27,17 @@ class SetCacheDriverToRedisCommand extends Command
     /**
      * Execute the console command.
      */
-    public function handle():void
+    public function handle():int
     {
         if (! $this->setEnvironmentFile()) {
-            return;
+            return 1;
         }
 
         $this->laravel['config']['cache.default'] = 'redis';
 
         $this->components->info('Cache set successfully.');
+
+        return 0;
     }
 
     /**
@@ -63,7 +67,7 @@ class SetCacheDriverToRedisCommand extends Command
      */
     protected function writeNewEnvironmentFile(): bool
     {
-        $input = file_get_contents($this->laravel->environmentFilePath());
+        $input = File::get($this->laravel->environmentFilePath());
         if (!$input) {
             $this->error('Unable to set the Cache Driver to redis. No .env file.');
             return false;
@@ -81,7 +85,7 @@ class SetCacheDriverToRedisCommand extends Command
             return false;
         }
 
-        file_put_contents($this->laravel->environmentFilePath(), $replaced);
+        File::set($this->laravel->environmentFilePath(), $replaced);
 
         return true;
     }

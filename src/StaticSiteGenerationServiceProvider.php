@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace Larasense\StaticSiteGeneration;
 
 use Illuminate\Support\ServiceProvider;
-use Larasense\StaticSiteGeneration\Console\Commands\GenerateStaticSite;
+use Larasense\StaticSiteGeneration\Console\Commands\GenerateStaticSiteCommand;
+use Larasense\StaticSiteGeneration\Console\Commands\ListPagesCommand;
 use Larasense\StaticSiteGeneration\Console\Commands\SetCacheDriverToRedisCommand;
 use Larasense\StaticSiteGeneration\Facades\Metadata;
 use Larasense\StaticSiteGeneration\Http\Middleware\SSGMiddleware;
@@ -20,8 +21,9 @@ final class StaticSiteGenerationServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands(
                 [
-                    GenerateStaticSite::class,
-                    SetCacheDriverToRedisCommand::class
+                    GenerateStaticSiteCommand::class,
+                    SetCacheDriverToRedisCommand::class,
+                    ListPagesCommand::class,
                 ],
             );
         }

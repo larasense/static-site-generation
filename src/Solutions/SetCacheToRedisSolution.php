@@ -38,7 +38,7 @@ class SetCacheToRedisSolution implements RunnableSolution
 
     public function run(array $parameters = []):void
     {
-        Artisan::call('ssg:set-cache');
+        Artisan::call('static:set-cache');
     }
 
     public function getRunParameters(): array
