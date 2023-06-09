@@ -20,7 +20,7 @@ class GenerateStaticSiteCommand extends Command
      *
      * @var string
      */
-    protected $description = '';
+    protected $description = 'generate Html & Json files for the defined routes.';
 
     /**
      * Execute the console command.

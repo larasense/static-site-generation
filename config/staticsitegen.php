@@ -9,11 +9,12 @@ return [
     |
     | This option controls the default cache connection that gets used while
     | using this caching library. This connection is used when another is
-    | not explicitly specified when executing a given caching function.
+    | not explicitly specified when executing a given caching function
     |
     */
 
-    'enabled' => env('SSG_ENABLED', false),
+    'enabled' => env('SSG_ENABLED', true),
+    'inertia' => env('SSG_INERTIA_ENABLED', true),
     'cached' => env('SSG_CACHE_ENABLED', false),
     'remember' => env('SSG_CACHE_REMEMBER', 60*60), // 1HR
 

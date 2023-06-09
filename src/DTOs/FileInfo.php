@@ -6,14 +6,25 @@ use Illuminate\Support\Facades\Storage;
 
 class FileInfo
 {
-    public int $timestamp;
-
     public function __construct(
         public readonly string $filename,
         public readonly string $extention,
     ){
-        /** @var string */
-        $disk = config('staticsitegen.storage_name');
-        $this->timestamp = Storage::disk($disk)->lastModified($filename);
+    }
+
+    public function __get(string $name): mixed
+    {
+        switch ($name) {
+            case 'timestamp':
+                # code...
+                /** @var string */
+                $disk = config('staticsitegen.storage_name');
+                if (!Storage::disk($disk)->exists($this->filename)){
+                    return now()->timestamp;
+                }
+                return Storage::disk($disk)->lastModified($this->filename);
+
+        }
+        return false;
     }
 }
