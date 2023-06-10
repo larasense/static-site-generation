@@ -1,4 +1,4 @@
-## Active development: Not ready to use
+## Active development: Not ready for use
 
 This package is in active development.
 
@@ -13,6 +13,27 @@ Now, we are not talking on a static only site like a documentation site, but app
 
 ```bash
 composer require larasense/static-site-generation
+```
+
+## Config
+
+Add the Service provider to the end of the list of providers
+
+```php
+// config/app.php
+
+    'providers' => ServiceProvider::defaultProviders()->merge([
+        /*
+         * Package Service Providers...
+         */
+
+        /*
+         * Application Service Providers...
+         */
+        App\Providers\RouteServiceProvider::class,
+        Larasense\StaticSiteGeneration\StaticSiteGenerationServiceProvider::class,
+    ])->toArray(),
+
 ```
 
 ## How to use it
