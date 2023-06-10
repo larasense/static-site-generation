@@ -45,9 +45,9 @@ class ListPagesCommand extends Command
      */
     protected function toRows(string|array $urls): array
     {
-        return collect([$urls])
+        return collect([$urls]) // @phpstan-ignore-line
             ->flatten()
-            ->map(fn(string $url) => [$url])
+            ->map(fn(string $url) => [$url]) // @phpstan-ignore-line
             ->toArray();
     }
 }

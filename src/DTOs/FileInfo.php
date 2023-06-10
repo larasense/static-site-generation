@@ -4,6 +4,9 @@ namespace Larasense\StaticSiteGeneration\DTOs;
 
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * @property int $timestamp
+ */
 class FileInfo
 {
     public function __construct(
