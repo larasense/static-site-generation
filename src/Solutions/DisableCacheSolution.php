@@ -17,7 +17,7 @@ class DisableCacheSolution implements RunnableSolution
     public function getDocumentationLinks(): array
     {
         return [
-            'Laravel' => 'https://laravel.com/docs/master/installation#configuration',
+            'Read more' => 'https://github.com/larasense/static-site-generation/blob/main/docs/cache-configuration.md#bad-cache-configuration',
         ];
     }
 
