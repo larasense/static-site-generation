@@ -45,18 +45,26 @@ expect()->extend('toBeOne', function () {
 | global functions to help you to reduce the number of lines of code in your test files.
 |
 */
-
-
 use Larasense\StaticSiteGeneration\Tests\Stubs\Controllers\{TestPathController, TestRevalidateController};
 use Illuminate\Support\Facades\Route;
 use Larasense\StaticSiteGeneration\Http\Middleware\SSGMiddleware;
+use Illuminate\Support\Facades\Response as ResponseFacade;
+use Illuminate\Http\Response;
 
-function artisan(string $command)
+function artisan(string $command): \Illuminate\Testing\PendingCommand
 {
-    return test()->artisan($command);
+    return test()->artisan($command); // phpstan-ignore-line
 }
 
-function registerRoutes()
+function fakeResponse(string $content = ""): Response
+{
+    return ResponseFacade::make($content);
+}
+
+/**
+ * @return array<int,\Illuminate\Routing\Route>
+ */
+function registerRoutes(): array
 {
     $routes = [
          Route::get('/show/{id}', [TestPathController::class, 'show'])->middleware(SSGMiddleware::class),

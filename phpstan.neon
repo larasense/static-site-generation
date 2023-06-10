@@ -6,6 +6,8 @@ parameters:
 
     paths:
         - src
+    stubFiles:
+        - stubs/global.stub
 
     ignoreErrors:
         - "#Cannot access offset 'config' on [a-zA-Z0-9_]+#"

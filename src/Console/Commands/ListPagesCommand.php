@@ -27,6 +27,10 @@ class ListPagesCommand extends Command
      */
     public function handle():void
     {
+        if(!StaticSite::enabled()){
+            $this->warn("SSG is disabled");
+        }
+
         collect(StaticSite::all())->each(function(Page $page){
             $this->info("Controller: {$page->controller}");
             $this->info("Method: {$page->method}");

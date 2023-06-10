@@ -8,7 +8,7 @@ use Facades\Larasense\StaticSiteGeneration\Services\File;
 use Larasense\StaticSiteGeneration\Facades\StaticSite;
 
 
-class SetCacheDriverToRedisCommand extends Command
+class DisableCacheCommand extends Command
 {
     use ConfirmableTrait;
     /**
@@ -16,31 +16,31 @@ class SetCacheDriverToRedisCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'static:set-cache';
+    protected $signature = 'static:disable-cache';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Disable SSG cache';
 
     /**
      * Execute the console command.
      */
     public function handle():int
     {
-        if (!StaticSite::enabled()){
-            $this->error("SSG is disabled");
-            return 1;
+        if (!StaticSite::cached()){
+            $this->info("SSG Cache is Already disabled.");
+            return 0;
         }
         if (! $this->setEnvironmentFile()) {
             return 1;
         }
 
-        $this->laravel['config']['cache.default'] = 'redis';
+        $this->laravel['config']['staticsitegen.cached'] = 'redis';
 
-        $this->components->info('Cache set successfully.');
+        $this->components->info('Cache disabled successfully.');
 
         return 0;
     }
@@ -52,9 +52,9 @@ class SetCacheDriverToRedisCommand extends Command
      */
     protected function setEnvironmentFile(): bool
     {
-        $currentKey = $this->laravel['config']['cache.default'];
+        $currentKey = $this->laravel['config']['staticsitegen.cached']? 'true':'false';
 
-        if (strlen($currentKey) !== 'redis' && (! $this->confirmToProceed())) {
+        if (strlen($currentKey) !== 'true' && (! $this->confirmToProceed())) {
             return false;
         }
 
@@ -74,20 +74,18 @@ class SetCacheDriverToRedisCommand extends Command
     {
         $input = File::get($this->laravel->environmentFilePath());
         if (!$input) {
-            $this->error('Unable to set the Cache Driver to redis. No .env file.');
+            $this->error('Unable disable SSG Cache Driver. No .env file.');
             return false;
         }
 
         $replaced = preg_replace(
             $this->keyReplacementPattern(),
-            'CACHE_DRIVER=redis',
+            'SSG_CACHE_ENABLED=false',
             $input
         );
 
         if ($replaced === $input || $replaced === null) {
-            $this->error('Unable to set the Cache Driver to redis. No CACHE_DRIVER variable was found in the .env file.');
-
-            return false;
+            $replaced .= "\n\nSSG_CACHE_ENABLED=false\n";
         }
 
         File::set($this->laravel->environmentFilePath(), $replaced);
@@ -102,8 +100,10 @@ class SetCacheDriverToRedisCommand extends Command
      */
     protected function keyReplacementPattern(): string
     {
-        $escaped = preg_quote('='.$this->laravel['config']['cache.default'], '/');
+        $currentKey = $this->laravel['config']['staticsitegen.cached']? 'true':'false';
+        $escaped = preg_quote('='.$currentKey, '/');
 
-        return "/^CACHE_DRIVER{$escaped}/m";
+        return "/^SSG_CACHE_ENABLED{$escaped}/m";
     }
 }
+

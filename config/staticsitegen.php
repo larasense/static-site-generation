@@ -15,7 +15,7 @@ return [
 
     'enabled' => env('SSG_ENABLED', true),
     'inertia' => env('SSG_INERTIA_ENABLED', true),
-    'cached' => env('SSG_CACHE_ENABLED', false),
+    'cached' => env('SSG_CACHE_ENABLED', true),
     'remember' => env('SSG_CACHE_REMEMBER', 60*60), // 1HR
 
     'storage_name' => env('SSG_STORAGE_NAME', 'ssg:store'),

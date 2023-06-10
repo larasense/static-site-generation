@@ -18,7 +18,8 @@ class StaticSiteService
 {
     public function checkEnvironment(Request $request):bool
     {
-        return $this->isRequestOk($request) &&
+        return $this->enabled() &&
+               $this->isRequestOk($request) &&
                $this->isCacheOk() &&
                $this->isStorageOk();
     }
@@ -158,6 +159,19 @@ class StaticSiteService
         $storage_name = config('staticsitegen.storage_name');
         return null === config("filesystems.disks.$storage_name") ? throw_if(!app()->environment('production'), StorageNotFoundException::class, $storage_name): true; /** @phpstan-ignore-line */
 
+    }
+
+    public function enabled(): bool
+    {
+        return config('staticsitegen.enabled')?true:false;
+    }
+    public function cached(): bool
+    {
+        return config('staticsitegen.cached')?true:false;
+    }
+    public function withInertia(): bool
+    {
+        return config('staticsitegen.inertia')?true:false;
     }
 
 }

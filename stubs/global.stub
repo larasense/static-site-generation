@@ -1,0 +1,7 @@
+<?php
+
+/**
+ * @return array<int,\Illuminate\Routing\Route>
+ */
+function registerRoutes(): array
+{}

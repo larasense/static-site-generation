@@ -8,6 +8,7 @@ use Illuminate\Support\ServiceProvider;
 use Larasense\StaticSiteGeneration\Console\Commands\GenerateStaticSiteCommand;
 use Larasense\StaticSiteGeneration\Console\Commands\ListPagesCommand;
 use Larasense\StaticSiteGeneration\Console\Commands\SetCacheDriverToRedisCommand;
+use Larasense\StaticSiteGeneration\Console\Commands\DisableCacheCommand;
 use Larasense\StaticSiteGeneration\Facades\Metadata;
 use Larasense\StaticSiteGeneration\Http\Middleware\SSGMiddleware;
 use Illuminate\Routing\Route;
@@ -23,6 +24,7 @@ final class StaticSiteGenerationServiceProvider extends ServiceProvider
                 [
                     GenerateStaticSiteCommand::class,
                     SetCacheDriverToRedisCommand::class,
+                    DisableCacheCommand::class,
                     ListPagesCommand::class,
                 ],
             );
