@@ -8,6 +8,6 @@ repos:
           - "--memory-limit=2G"
       - id: php-lint
   - repo: https://github.com/larasense/pre-commit-php-laravel
-    rev: 1.0.0
+    rev: 1.0.1
     hooks:
       - id: pest-test

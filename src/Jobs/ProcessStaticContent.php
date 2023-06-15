@@ -26,7 +26,6 @@ class ProcessStaticContent implements ShouldQueue
      */
     public function handle(): void
     {
-
         /** @var string */
         $disk = config('staticsitegen.storage_name');
         Storage::disk($disk)->put(
