@@ -31,7 +31,10 @@
     "laravel": {
       "dont-discover": [
         "*"
-      ]
+      ],
+      "aliases": {
+        "SSG": "Larasense\\StaticSiteGeneration\\Attributes\\SSG"
+      }
     }
   },
   "scripts": {

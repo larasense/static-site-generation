@@ -1,0 +1,9 @@
+repos:
+  - repo: https://github.com/digitalpulp/pre-commit-php.git
+    rev: 1.4.0
+    hooks:
+      - id: php-stan
+        pass_filenames: false
+        args:
+          - "--memory-limit=2G"
+      - id: php-lint
