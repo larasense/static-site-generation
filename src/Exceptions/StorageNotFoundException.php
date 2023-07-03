@@ -17,7 +17,7 @@ class StorageNotFoundException extends SSGException implements ProvidesSolution
         return BaseSolution::create("Add `{$this->storage_name}` to `config/filesystems.php`. ")
             ->setSolutionDescription("The html's and json's file should be stored needs to be defined")
             ->setDocumentationLinks([
-                'Check out some examples `here`' => 'https://flareapp.io/docs',
+                'Check out some examples `here`' => 'https://github.com/larasense/static-site-generation/blob/main/docs/storage-disk-configuration.md',
             ]);
     }
 }

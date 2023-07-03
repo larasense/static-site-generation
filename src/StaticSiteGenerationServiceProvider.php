@@ -33,6 +33,8 @@ final class StaticSiteGenerationServiceProvider extends ServiceProvider
             __DIR__.'/../config/staticsitegen.php' => config_path('staticsitegen.php')
         ], 'staticsitegen-config');
 
+        $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
+
         $this->app->make(SolutionProviderRepository::class)->registerSolutionProvider(StaticSiteGenerationSolutionProvider::class);
 
         $this->loadAll();

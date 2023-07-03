@@ -101,6 +101,21 @@ class StaticSiteService
         return true;
     }
 
+        /**
+         *
+         * @return array<string,mixed>
+         */
+    public function getUserInfo(): array
+    {
+            $user = auth()->user();
+            return [
+                'user' => [
+                    'userInfo' => route('staticsitegen:current'),
+                    'updated_at' => $user->updated_at ?? null
+                ]
+            ];
+    }
+
 
     protected function getFileInfo(Request $request): FileInfo
     {
