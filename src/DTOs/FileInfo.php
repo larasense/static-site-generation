@@ -12,7 +12,7 @@ class FileInfo
     public function __construct(
         public readonly string $filename,
         public readonly string $extention,
-    ){
+    ) {
     }
 
     public function __get(string $name): mixed
@@ -22,7 +22,7 @@ class FileInfo
                 # code...
                 /** @var string */
                 $disk = config('staticsitegen.storage_name');
-                if (!Storage::disk($disk)->exists($this->filename)){
+                if (!Storage::disk($disk)->exists($this->filename)) {
                     return now()->timestamp;
                 }
                 return Storage::disk($disk)->lastModified($this->filename);

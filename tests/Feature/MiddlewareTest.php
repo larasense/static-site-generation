@@ -1,21 +1,22 @@
 <?php
+
 use Larasense\StaticSiteGeneration\Facades\StaticSite;
 use Larasense\StaticSiteGeneration\Http\Middleware\SSGMiddleware;
 use Illuminate\Http\Request;
 
-
-it('should call the $next function', function(){
+it('should call the $next function', function () {
 
     $routes = registerRoutes();
 
     $request = Request::create('/', 'GET');
-    $request->setRouteResolver(fn()=>$routes[1]);
-    $middleware = new SSGMiddleware;
+    $request->headers->set('X-Inertia-Partial-Data','true');
+    $request->setRouteResolver(fn () =>$routes[1]);
+    $middleware = new SSGMiddleware();
 
     //TODO: find a better way to mock a callback function
     /** @var bool */
     $next_was_called = false;
-    $next = function() use(&$next_was_called) {
+    $next = function () use (&$next_was_called) {
         $next_was_called = true;
         return fakeResponse();
     };
@@ -24,20 +25,20 @@ it('should call the $next function', function(){
     expect($next_was_called)->toBe(true);
 });
 
-it('should not call the $next function and retrieve a file from disk', function(){
+it('should not call the $next function and retrieve a file from disk', function () {
 
     $routes = registerRoutes();
     StaticSite::shouldReceive('getContent')->andReturn('Content From Disk');
     StaticSite::makePartial();
 
     $request = Request::create('/', 'GET');
-    $request->setRouteResolver(fn()=>$routes[1]);
-    $middleware = new SSGMiddleware;
+    $request->setRouteResolver(fn () =>$routes[1]);
+    $middleware = new SSGMiddleware();
 
     //TODO: find a better way to mock a callback function
     /** @var bool */
     $next_was_called = false;
-    $next = function() use(&$next_was_called) {
+    $next = function () use (&$next_was_called) {
         $next_was_called = true;
         return fakeResponse();
     };
@@ -49,7 +50,7 @@ it('should not call the $next function and retrieve a file from disk', function(
 
 });
 
-it('should call the $next function and  not retrieve a file from disk when disabled', function(){
+it('should call the $next function and  not retrieve a file from disk when disabled', function () {
 
     Config::set('staticsitegen.enabled', false);
     $routes = registerRoutes();
@@ -57,13 +58,14 @@ it('should call the $next function and  not retrieve a file from disk when disab
     StaticSite::makePartial();
 
     $request = Request::create('/', 'GET');
-    $request->setRouteResolver(fn()=>$routes[1]);
-    $middleware = new SSGMiddleware;
+    $request->setRouteResolver(fn () =>$routes[1]);
+    $request->headers->set('X-Inertia-Partial-Data','true');
+    $middleware = new SSGMiddleware();
 
     //TODO: find a better way to mock a callback function
     /** @var bool */
     $next_was_called = false;
-    $next = function() use(&$next_was_called) {
+    $next = function () use (&$next_was_called) {
         $next_was_called = true;
         return fakeResponse("Content From Controller");
     };

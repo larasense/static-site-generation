@@ -3,6 +3,7 @@
 namespace Larasense\StaticSiteGeneration\Http\Middleware;
 
 use Closure;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Larasense\StaticSiteGeneration\Facades\StaticSite;
@@ -15,22 +16,17 @@ class SSGMiddleware
      * @param  \Illuminate\Http\Request $request
      * @param  \Closure $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next): Response | JsonResponse
     {
-        if ($response = StaticSite::get($request)){
+        if ($response = StaticSite::get($request)) {
             return $response;
         }
-        return $next($request);
+        return StaticSite::securityGard($request, $next($request));
     }
 
-    public function terminate(Request $request, Response $response): void
+    public function terminate(Request $request, Response | JsonResponse $response): void
     {
-        /*
-        if (!app()->environment('production')) {
-            return;
-        }
-        */
-        if (!StaticSite::checkEnvironment($request)){
+        if (!StaticSite::checkEnvironment($request) || StaticSite::isInertiaPartial($request)) {
             return;
         }
 
@@ -50,4 +46,3 @@ class SSGMiddleware
 
     }
 }
-

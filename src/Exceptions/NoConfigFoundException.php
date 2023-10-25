@@ -17,4 +17,3 @@ class NoConfigFoundException extends SSGException implements ProvidesSolution
         return new RunVendorPublishSolution();
     }
 }
-

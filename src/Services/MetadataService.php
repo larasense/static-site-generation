@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Larasense\StaticSiteGeneration\Services;
@@ -16,7 +17,7 @@ class MetadataService
 {
     public function get(Route|string|null $route): Page | false
     {
-        if (!$route instanceof Route){
+        if (!$route instanceof Route) {
             return false;
         }
 
@@ -45,8 +46,8 @@ class MetadataService
     {
         /** @phpstan-ignore-next-line */
         return $this->routes()
-            ->map(fn(Route $route) => $this->get($route))
-            ;
+            ->map(fn (Route $route) => $this->get($route))
+        ;
     }
 
     /**
@@ -58,25 +59,25 @@ class MetadataService
      */
     public function routes(): Collection
     {
-        if(!count(RouteFacade::getRoutes()->getRoutesByMethod())){
+        if(!count(RouteFacade::getRoutes()->getRoutesByMethod())) {
             return collect([]);
         }
         /** @phpstan-ignore-next-line */
         return collect(RouteFacade::getRoutes()->getRoutesByMethod()['GET'])
-            ->filter(fn(Route $route) => $this->hasAttributes($route))
-            ;
+            ->filter(fn (Route $route) => $this->hasAttributes($route))
+        ;
     }
 
     protected function hasAttributes(Route $route): bool
     {
-        if (!isset($route->action['controller'])){
+        if (!isset($route->action['controller'])) {
             return false;
         }
 
-        if (!$route->action['controller']){
+        if (!$route->action['controller']) {
             return false;
         }
-        if (!Str::contains($route->action['controller'], '@')){
+        if (!Str::contains($route->action['controller'], '@')) {
             return false;
         }
 
@@ -103,4 +104,3 @@ class MetadataService
 
     }
 }
-

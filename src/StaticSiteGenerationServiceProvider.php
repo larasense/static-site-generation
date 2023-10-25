@@ -46,14 +46,15 @@ final class StaticSiteGenerationServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(
-            __DIR__.'/../config/staticsitegen.php', 'staticsitegen'
+            __DIR__.'/../config/staticsitegen.php',
+            'staticsitegen'
         );
     }
 
-    protected function loadAll():void
+    protected function loadAll(): void
     {
         if (!$this->app->runningInConsole()) {
-            Metadata::routes()->each(function(Route $route) {
+            Metadata::routes()->each(function (Route $route) {
                 $route->middleware(SSGMiddleware::class);
             });
         }

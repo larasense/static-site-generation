@@ -16,16 +16,20 @@ class Page
     /**
      *
      * @param string|array<int,string> $urls
+     * @param array<int,string> $security
      */
     public function __construct(
         public readonly string $uri,
         public readonly string $controller,
         public readonly string $method,
+        public bool $partial_visit = false,
         public ?string $path = null,
         public ?int $revalidate = 0,
         public string|array $urls = '',
+        public array $security = [],
         public ?FileInfo $file = null
-    ){}
+    ) {
+    }
 
     /**
      * @param ReflectionAttribute<SSG> $attribute
@@ -33,11 +37,14 @@ class Page
     public function setAttribute(ReflectionAttribute $attribute): self
     {
         $arguments = $attribute->getArguments();
-        if(isset($arguments['path'])){
+        if(isset($arguments['path'])) {
             $this->path = $arguments['path'];
         }
-        if(isset($arguments['revalidate'])){
+        if(isset($arguments['revalidate'])) {
             $this->revalidate = $arguments['revalidate'];
+        }
+        if(isset($arguments['security'])) {
+            $this->security = $arguments['security'];
         }
         return $this;
     }
@@ -48,7 +55,7 @@ class Page
             case 'is_path_needed':
                 return str($this->uri)->contains("{") && !$this->path;  /** @phpstan-ignore-line */
             case 'need_revalidation':
-                if (!$this->file){
+                if (!$this->file) {
                     return false;
                 }
                 $timestamp = now()->timestamp;
@@ -59,4 +66,3 @@ class Page
 
 
 }
-

@@ -2,11 +2,9 @@
 
 namespace Larasense\StaticSiteGeneration\Tests;
 
-
 use Orchestra\Testbench\TestCase as Orchestra;
 use Larasense\StaticSiteGeneration\StaticSiteGenerationServiceProvider;
 use Spatie\LaravelIgnition\IgnitionServiceProvider;
-
 
 class TestCase extends Orchestra
 {

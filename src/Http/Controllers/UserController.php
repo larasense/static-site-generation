@@ -2,13 +2,21 @@
 
 namespace Larasense\StaticSiteGeneration\Http\Controllers;
 
-use Illuminate\Foundation\Auth\User;
-
+use Illuminate\Http\JsonResponse;
 
 class UserController
 {
-    public function show():User|null
+    public function show(): JsonResponse
     {
-        return auth()->user();
+        $user = auth()->user();
+
+        if(!$user) {
+            return response()->json([]);
+        }
+
+        return response()->json([
+            'user'=>$user,
+            'updated_at' => $user->updated_at, // @phpstan-ignore-line
+        ]);
     }
 }

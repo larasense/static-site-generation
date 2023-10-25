@@ -25,9 +25,9 @@ class GenerateStaticSiteCommand extends Command
     /**
      * Execute the console command.
      */
-    public function handle():void
+    public function handle(): void
     {
-        if(!StaticSite::enabled()){
+        if(!StaticSite::enabled()) {
             $this->error("SSG is disabled");
             return;
         }
@@ -38,7 +38,7 @@ class GenerateStaticSiteCommand extends Command
         //TODO: delete all files before recreating htmls and jsons
         foreach ($urls as $url) {
             Http::get($url);
-            if (StaticSite::withInertia()){
+            if (StaticSite::withInertia()) {
                 Http::withHeaders(['X-Inertia' => 'true'])->get($url);
             }
             $output->progressAdvance();

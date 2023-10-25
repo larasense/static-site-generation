@@ -8,7 +8,8 @@ use Spatie\Ignition\Contracts\ProvidesSolution;
 
 class StorageNotFoundException extends SSGException implements ProvidesSolution
 {
-    public function __construct(protected string $storage_name){
+    public function __construct(protected string $storage_name)
+    {
         parent::__construct("In order to generate the HTML and JSON static files, we need to know where to store them. Please add a disk configuration for this purpouse in `config/filesystems.php` ");
     }
 

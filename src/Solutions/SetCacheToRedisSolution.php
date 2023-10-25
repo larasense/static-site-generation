@@ -36,7 +36,7 @@ class SetCacheToRedisSolution implements RunnableSolution
         return 'There is no difference with the storage static files';
     }
 
-    public function run(array $parameters = []):void
+    public function run(array $parameters = []): void
     {
         Artisan::call('static:set-cache');
     }
@@ -46,4 +46,3 @@ class SetCacheToRedisSolution implements RunnableSolution
         return [];
     }
 }
-

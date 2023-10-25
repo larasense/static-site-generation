@@ -36,7 +36,7 @@ class DisableCacheSolution implements RunnableSolution
         return 'There is no difference with the storage static files';
     }
 
-    public function run(array $parameters = []):void
+    public function run(array $parameters = []): void
     {
         Artisan::call('static:disable-cache');
     }
@@ -46,5 +46,3 @@ class DisableCacheSolution implements RunnableSolution
         return [];
     }
 }
-
-

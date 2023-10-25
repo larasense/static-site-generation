@@ -7,7 +7,6 @@ use Illuminate\Console\ConfirmableTrait;
 use Facades\Larasense\StaticSiteGeneration\Services\File;
 use Larasense\StaticSiteGeneration\Facades\StaticSite;
 
-
 class SetCacheDriverToRedisCommand extends Command
 {
     use ConfirmableTrait;
@@ -28,9 +27,9 @@ class SetCacheDriverToRedisCommand extends Command
     /**
      * Execute the console command.
      */
-    public function handle():int
+    public function handle(): int
     {
-        if (!StaticSite::enabled()){
+        if (!StaticSite::enabled()) {
             $this->error("SSG is disabled");
             return 1;
         }

@@ -17,7 +17,7 @@ class StaticSiteGenerationSolutionProvider implements HasSolutionsForThrowable
 
     public function getSolutions(Throwable $throwable): array
     {
-        if ($throwable instanceof BadCacheConfigException){
+        if ($throwable instanceof BadCacheConfigException) {
             return [
                 new SetCacheToRedisSolution(),
                 new DisableCacheSolution()

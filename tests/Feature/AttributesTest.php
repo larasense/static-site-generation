@@ -6,8 +6,7 @@ use Larasense\StaticSiteGeneration\Facades\StaticSite;
 use Larasense\StaticSiteGeneration\Http\Middleware\SSGMiddleware;
 use Larasense\StaticSiteGeneration\Tests\Stubs\Controllers\{TestPathController, TestRevalidateController};
 
-
-it('should run the path function', function(){
+it('should run the path function', function () {
     $route = Route::get('/show/{id}', [TestPathController::class, 'show'])->middleware(SSGMiddleware::class);
 
     expect(StaticSite::urls())
@@ -19,7 +18,7 @@ it('should run the path function', function(){
     ;
 });
 
-it('should read the revalidate value', function() {
+it('should read the revalidate value', function () {
     $route = Route::get('/', [TestRevalidateController::class, 'index'])->middleware(SSGMiddleware::class);
 
     expect(Metadata::get($route))
@@ -27,4 +26,3 @@ it('should read the revalidate value', function() {
         ->need_revalidation->toBe(false)
     ;
 });
-

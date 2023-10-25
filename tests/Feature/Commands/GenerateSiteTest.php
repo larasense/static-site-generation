@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 
-it('should get all ulrs and generate the files in html and json version', function() {
+it('should get all ulrs and generate the files in html and json version', function () {
     registerRoutes();
 
     $http = Http::spy();
@@ -17,7 +17,7 @@ it('should get all ulrs and generate the files in html and json version', functi
     Http::shouldHaveReceived('get')->with('http://localhost/show/2')->times(2);
 });
 
-it('should get all ulrs and generate the files in html version', function() {
+it('should get all ulrs and generate the files in html version', function () {
     registerRoutes();
     Config::set('staticsitegen.inertia', false);
     Http::spy();
@@ -30,7 +30,7 @@ it('should get all ulrs and generate the files in html version', function() {
     Http::shouldHaveReceived('get')->with('http://localhost/show/2')->times(1);
 });
 
-it('should not generate the files in html or json version When disabled', function() {
+it('should not generate the files in html or json version When disabled', function () {
     registerRoutes();
     Config::set('staticsitegen.enabled', false);
     Http::spy();
@@ -38,7 +38,7 @@ it('should not generate the files in html or json version When disabled', functi
     artisan('static:generate-site')
         ->assertSuccessful()
         ->expectsOutputToContain('SSG is disabled')
-        ;
+    ;
 
     Http::shouldNotHaveReceived('get');
 });

@@ -2,7 +2,7 @@
 
 use Facades\Larasense\StaticSiteGeneration\Services\File;
 
-it('should fail with message `No .env file.`', function(){
+it('should fail with message `No .env file.`', function () {
     File::shouldReceive('get')->andReturn(false);
 
     artisan('static:set-cache')
@@ -12,7 +12,7 @@ it('should fail with message `No .env file.`', function(){
     File::shouldNotHaveReceived('set');
 });
 
-it('should fail with message `No CACHE_DRIVER variable was found in the .env file`', function(){
+it('should fail with message `No CACHE_DRIVER variable was found in the .env file`', function () {
     File::shouldReceive('get')->andReturn("some env content");
 
     artisan('static:set-cache')
@@ -23,7 +23,7 @@ it('should fail with message `No CACHE_DRIVER variable was found in the .env fil
     File::shouldNotHaveReceived('set');
 });
 
-it('should fail with message `SSG is disabled`', function(){
+it('should fail with message `SSG is disabled`', function () {
     Config::set('staticsitegen.enabled', false);
     File::spy();
 
@@ -36,7 +36,7 @@ it('should fail with message `SSG is disabled`', function(){
     File::shouldNotHaveReceived('set');
 });
 
-it('should set the cache to redis', function(){
+it('should set the cache to redis', function () {
     registerRoutes();
 
     Config::set('cache.default', 'file');
@@ -48,4 +48,3 @@ it('should set the cache to redis', function(){
         ->assertExitCode(0)
     ;
 });
-

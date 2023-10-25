@@ -1,6 +1,7 @@
 <?php
 
 namespace Larasense\StaticSiteGeneration\Facades;
+
 use Illuminate\Support\Facades\Facade;
 use Larasense\StaticSiteGeneration\Services\StaticSiteService;
 

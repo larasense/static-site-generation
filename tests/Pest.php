@@ -14,8 +14,8 @@ use Illuminate\Support\Facades\Config;
 */
 
 uses(Larasense\StaticSiteGeneration\Tests\TestCase::class)
-    ->beforeEach(function(){
-      Config::set('filesystems.disks.ssg:store', ['driver'=>'local', 'root'=>'/tmp', 'throw' => false]);
+    ->beforeEach(function () {
+        Config::set('filesystems.disks.ssg:store', ['driver'=>'local', 'root'=>'/tmp', 'throw' => false]);
     })
     ->group('features')
     ->in('Feature');
@@ -56,11 +56,23 @@ function artisan(string $command): \Illuminate\Testing\PendingCommand
     return test()->artisan($command); // phpstan-ignore-line
 }
 
-function fakeResponse(string $content = ""): Response
+/**
+ *
+ * @param array<string, mixed>|string $content
+ */
+function fakeResponse(string|array $content = ""): Response
 {
     return ResponseFacade::make($content);
 }
 
+/**
+ *
+ * @param array<string, mixed> $data
+ */
+function fakeView(array $data = []): Response
+{
+    return ResponseFacade::view('app', data: $data);
+}
 /**
  * @return array<int,\Illuminate\Routing\Route>
  */

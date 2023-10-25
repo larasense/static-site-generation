@@ -7,7 +7,6 @@ use Illuminate\Console\ConfirmableTrait;
 use Facades\Larasense\StaticSiteGeneration\Services\File;
 use Larasense\StaticSiteGeneration\Facades\StaticSite;
 
-
 class DisableCacheCommand extends Command
 {
     use ConfirmableTrait;
@@ -28,9 +27,9 @@ class DisableCacheCommand extends Command
     /**
      * Execute the console command.
      */
-    public function handle():int
+    public function handle(): int
     {
-        if (!StaticSite::cached()){
+        if (!StaticSite::cached()) {
             $this->info("SSG Cache is Already disabled.");
             return 0;
         }
@@ -52,7 +51,7 @@ class DisableCacheCommand extends Command
      */
     protected function setEnvironmentFile(): bool
     {
-        $currentKey = $this->laravel['config']['staticsitegen.cached']? 'true':'false';
+        $currentKey = $this->laravel['config']['staticsitegen.cached'] ? 'true' : 'false';
 
         if (strlen($currentKey) !== 'true' && (! $this->confirmToProceed())) {
             return false;
@@ -100,10 +99,9 @@ class DisableCacheCommand extends Command
      */
     protected function keyReplacementPattern(): string
     {
-        $currentKey = $this->laravel['config']['staticsitegen.cached']? 'true':'false';
+        $currentKey = $this->laravel['config']['staticsitegen.cached'] ? 'true' : 'false';
         $escaped = preg_quote('='.$currentKey, '/');
 
         return "/^SSG_CACHE_ENABLED{$escaped}/m";
     }
 }
-

@@ -36,7 +36,7 @@ class RunVendorPublishSolution implements RunnableSolution
         return 'We need to set some things up before static files can be generated';
     }
 
-    public function run(array $parameters = []):void
+    public function run(array $parameters = []): void
     {
         Artisan::call('vendor:publish', ['--tag'=>'staticsitegen-config']);
     }

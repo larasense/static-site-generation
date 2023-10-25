@@ -25,13 +25,13 @@ class ListPagesCommand extends Command
     /**
      * Execute the console command.
      */
-    public function handle():void
+    public function handle(): void
     {
-        if(!StaticSite::enabled()){
+        if(!StaticSite::enabled()) {
             $this->warn("SSG is disabled");
         }
 
-        collect(StaticSite::all())->each(function(Page $page){
+        collect(StaticSite::all())->each(function (Page $page) {
             $this->info("Controller: {$page->controller}");
             $this->info("Method: {$page->method}");
             $this->info("Uri: {$page->uri}");
@@ -47,7 +47,7 @@ class ListPagesCommand extends Command
     {
         return collect([$urls]) // @phpstan-ignore-line
             ->flatten()
-            ->map(fn(string $url) => [$url]) // @phpstan-ignore-line
+            ->map(fn (string $url) => [$url]) // @phpstan-ignore-line
             ->toArray();
     }
 }

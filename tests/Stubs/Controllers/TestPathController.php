@@ -14,7 +14,7 @@ class TestPathController extends Controller
     }
 
     /** @return array<array<string,int>> */
-    public static function getStaticPath():array
+    public static function getStaticPath(): array
     {
         return [
             [ 'id' => 1],

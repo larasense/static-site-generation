@@ -1,9 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Http;
 use Facades\Larasense\StaticSiteGeneration\Services\File;
 
-it('should not disable cache when it is already disabled', function(){
+it('should not disable cache when it is already disabled', function () {
     registerRoutes();
 
     File::spy();
@@ -17,7 +16,7 @@ it('should not disable cache when it is already disabled', function(){
     File::shouldNotHaveReceived('set');
 });
 
-it('should disable cache', function(){
+it('should disable cache', function () {
     registerRoutes();
 
     Config::set('staticsitegen.cached', true);
@@ -30,7 +29,7 @@ it('should disable cache', function(){
     ;
 });
 
-it('should disable cache even if SSG is disabled', function(){
+it('should disable cache even if SSG is disabled', function () {
     registerRoutes();
 
     Config::set('staticsitegen.enabled', false);
@@ -44,7 +43,7 @@ it('should disable cache even if SSG is disabled', function(){
     ;
 });
 
-it('should disable cache even when the SSG_CACHE_ENABLED is not set in the .env', function(){
+it('should disable cache even when the SSG_CACHE_ENABLED is not set in the .env', function () {
     registerRoutes();
 
     Config::set('staticsitegen.cached', true);
@@ -56,4 +55,3 @@ it('should disable cache even when the SSG_CACHE_ENABLED is not set in the .env'
         ->assertExitCode(0)
     ;
 });
-
