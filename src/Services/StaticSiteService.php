@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Response as ResponseFacade;
 use Larasense\StaticSiteGeneration\Jobs\ProcessStaticContent;
+use Illuminate\Support\Facades\Log;
 
 class StaticSiteService
 {
@@ -30,7 +31,10 @@ class StaticSiteService
 
     public function get(Request $request): false | Response
     {
-        if (!$this->checkEnvironment($request) && $this->isInertiaPartial($request)) {
+        if (!$this->checkEnvironment($request)) {
+            return false;
+        }
+        if ($this->isInertiaPartial($request)){
             return false;
         }
 
@@ -201,7 +205,7 @@ class StaticSiteService
 
     public function securityGard(Request $request, Response | JsonResponse $response): Response | JsonResponse
     {
-        if (!$this->checkEnvironment($request) || !$this->isInertiaPartial($request)) {
+        if ($this->checkEnvironment($request) && $this->isInertiaPartial($request)) {
             return $response;
         }
 
@@ -209,15 +213,16 @@ class StaticSiteService
             return $response;
         }
 
-        if($response instanceof Response) {
-            $props = $response->original->getData()['page']['props']; // @phpstan-ignore-line
+        if(is_array($response->original)) {
+            $props = $response->original['props'];
         } else {
-            $props = $response->original['props']; // @phpstan-ignore-line
+            $props = $response->original->getData()['page']['props']; // @phpstan-ignore-line
         }
+        Log::info("LLega aca y chequea");
 
         foreach($metadata->security as $secProp) {
-            if(array_key_exists($secProp, $props)) { // @phpstan-ignore-line
-                throw new \Exception("Secure props should not be static generated");
+            if(array_key_exists($secProp, $props)) {
+                throw new \Exception("Secure props should not be static generated. '$secProp' is present ");
             }
         }
         return $response;

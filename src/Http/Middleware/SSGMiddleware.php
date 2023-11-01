@@ -21,6 +21,9 @@ class SSGMiddleware
         if ($response = StaticSite::get($request)) {
             return $response;
         }
+        // if(StaticSite::isInertiaPartial($request)){
+        //     dd("esta generandolo de nuevo");
+        // }
         return StaticSite::securityGard($request, $next($request));
     }
 

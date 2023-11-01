@@ -37,7 +37,10 @@ class GenerateStaticSiteCommand extends Command
         $output->progressStart(count($urls));
         //TODO: delete all files before recreating htmls and jsons
         foreach ($urls as $url) {
-            Http::get($url);
+            $response = Http::get($url);
+            if($response->status() !== 200){
+                abort(500,"Something Didn't work as expected. Go to $url to see more details about the problem");
+            }
             if (StaticSite::withInertia()) {
                 Http::withHeaders(['X-Inertia' => 'true'])->get($url);
             }

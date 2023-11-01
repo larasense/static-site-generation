@@ -9,6 +9,7 @@ it('should call the $next function', function () {
     $routes = registerRoutes();
 
     $request = Request::create('/', 'GET');
+    Config::set('staticsitegen.dev_enabled', true);
     $request->headers->set('X-Inertia-Partial-Data','true');
     $request->setRouteResolver(fn () =>$routes[1]);
     $middleware = new SSGMiddleware();
@@ -18,7 +19,7 @@ it('should call the $next function', function () {
     $next_was_called = false;
     $next = function () use (&$next_was_called) {
         $next_was_called = true;
-        return fakeResponse();
+        return fakeResponse(['props'=>['pepe'=>'papa']]);
     };
 
     $response = $middleware->handle($request, $next);
@@ -28,6 +29,7 @@ it('should call the $next function', function () {
 it('should not call the $next function and retrieve a file from disk', function () {
 
     $routes = registerRoutes();
+    Config::set('staticsitegen.dev_enabled', true);
     StaticSite::shouldReceive('getContent')->andReturn('Content From Disk');
     StaticSite::makePartial();
 
@@ -40,7 +42,7 @@ it('should not call the $next function and retrieve a file from disk', function 
     $next_was_called = false;
     $next = function () use (&$next_was_called) {
         $next_was_called = true;
-        return fakeResponse();
+        return fakeResponse(['props'=>['pepe'=>'papa']]);
     };
 
     $response = $middleware->handle($request, $next);
@@ -67,12 +69,12 @@ it('should call the $next function and  not retrieve a file from disk when disab
     $next_was_called = false;
     $next = function () use (&$next_was_called) {
         $next_was_called = true;
-        return fakeResponse("Content From Controller");
+        return fakeResponse(['props'=>['pepe'=>'papa']]);
     };
 
     $response = $middleware->handle($request, $next);
     expect($next_was_called)->toBe(true);
 
-    expect($response->getContent())->toBe("Content From Controller");
+    expect($response->getContent())->toBe('{"props":{"pepe":"papa"}}');
 
 });
