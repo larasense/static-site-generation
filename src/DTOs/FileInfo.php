@@ -22,10 +22,11 @@ class FileInfo
                 # code...
                 /** @var string */
                 $disk = config('staticsitegen.storage_name');
-                if (!Storage::disk($disk)->exists($this->filename)) {
+                $storage = Storage::disk($disk);
+                if (!$storage->exists($this->filename)) {
                     return now()->timestamp;
                 }
-                return Storage::disk($disk)->lastModified($this->filename);
+                return $storage->lastModified($this->filename);
 
         }
         return false;

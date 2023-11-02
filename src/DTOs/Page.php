@@ -59,7 +59,7 @@ class Page
                     return false;
                 }
                 $timestamp = now()->timestamp;
-                return ($this->file->timestamp + $this->revalidate * 1000) < $timestamp;
+                return ($this->file->timestamp + $this->revalidate) < $timestamp;
         }
         return null;
     }

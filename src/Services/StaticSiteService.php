@@ -218,7 +218,6 @@ class StaticSiteService
         } else {
             $props = $response->original->getData()['page']['props']; // @phpstan-ignore-line
         }
-        Log::info("LLega aca y chequea");
 
         foreach($metadata->security as $secProp) {
             if(array_key_exists($secProp, $props)) {
