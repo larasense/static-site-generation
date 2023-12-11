@@ -1,4 +1,7 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
+
 namespace Larasense\StaticSiteGeneration\Services;
 
 use Illuminate\Http\Request;
@@ -14,9 +17,11 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Response as ResponseFacade;
 use Larasense\StaticSiteGeneration\Jobs\ProcessStaticContent;
 
+use function config;
+
 class StaticSiteService
 {
-    public function checkEnvironment(Request $request):bool
+    public function checkEnvironment(Request $request): bool
     {
         return $this->enabled() &&
                $this->isRequestOk($request) &&
@@ -26,7 +31,7 @@ class StaticSiteService
 
     public function get(Request $request): false | Response
     {
-        if (!$this->checkEnvironment($request)){
+        if (!$this->checkEnvironment($request)) {
             return false;
         }
 
@@ -36,7 +41,7 @@ class StaticSiteService
 
         $metadata->file = $this->getFileInfo($request);
 
-        if ($metadata->need_revalidation){
+        if ($metadata->need_revalidation) {
             return false;
         }
 
@@ -49,7 +54,7 @@ class StaticSiteService
         $response = ResponseFacade::make($content, Response::HTTP_OK);
         $response->header('Content-Type', $metadata->file->extention === 'html' ? 'text/html' : 'application/json');
         $response->header('X-SSG', 'true');
-        if ($metadata->file->extention == 'json'){
+        if ($metadata->file->extention == 'json') {
             $response->header('X-Inertia', 'true');
         }
         return $response;
@@ -63,13 +68,13 @@ class StaticSiteService
     {
         /** @phpstan-ignore-next-line */
         return Metadata::all()
-            ->map(function(Page $metadata){
-                if(isset($metadata->path)){
+            ->map(function (Page $metadata) {
+                if(isset($metadata->path)) {
                     $class = $metadata->controller;
                     $path = $metadata->path;
                     $arguments = $class::$path();
                     $paths = [];
-                    foreach ($arguments as $argument){
+                    foreach ($arguments as $argument) {
                         $paths[] = action([$metadata->controller,$metadata->method], $argument);
                     }
                     $metadata->urls = $paths;
@@ -77,7 +82,7 @@ class StaticSiteService
                     $metadata->urls = action([$metadata->controller,$metadata->method]);
                 }
                 return $metadata;
-        })->toArray();
+            })->toArray();
     }
 
     /**
@@ -93,7 +98,7 @@ class StaticSiteService
     public function process(Request $request, Response | JsonResponse $response): bool
     {
         $content = $response->getContent();
-        if($content){
+        if($content) {
             $file = $this->getFileInfo($request);
             ProcessStaticContent::dispatch($content, $file->filename);
             return false;
@@ -101,19 +106,19 @@ class StaticSiteService
         return true;
     }
 
-        /**
-         *
-         * @return array<string,mixed>
-         */
+    /**
+     *
+     * @return array<string,mixed>
+     */
     public function getUserInfo(): array
     {
-            $user = auth()->user();
-            return [
-                'user' => [
-                    'userInfo' => route('staticsitegen:current'),
-                    'updated_at' => $user->updated_at ?? null
-                ]
-            ];
+        $user = auth()->user();
+        return [
+            'user' => [
+                'userInfo' => route('staticsitegen:current'),
+                'updated_at' => $user->updated_at ?? null
+            ]
+        ];
     }
 
 
@@ -140,20 +145,20 @@ class StaticSiteService
     {
         /** @var int */
         $seconds = config('staticsitegen.remember');
-        return Cache::remember("ssg:{$file_info->filename}", $seconds, function() use($file_info){
+        return Cache::remember("ssg:{$file_info->filename}", $seconds, function () use ($file_info) {
             return $this->getFileContent($file_info);
         });
     }
 
     protected function getFileContent(FileInfo $file_info): string|bool|null
     {
-            /** @var string */
-            $disk = config('staticsitegen.storage_name');
+        /** @var string */
+        $disk = config('staticsitegen.storage_name');
 
-            if (!Storage::disk($disk)->exists($file_info->filename)) {
-                return false;
-            }
-            return Storage::disk($disk)->get($file_info->filename);
+        if (!Storage::disk($disk)->exists($file_info->filename)) {
+            return false;
+        }
+        return Storage::disk($disk)->get($file_info->filename);
     }
 
     protected function isRequestOk(Request $request): bool
@@ -172,21 +177,21 @@ class StaticSiteService
     protected function isStorageOk(): bool
     {
         $storage_name = config('staticsitegen.storage_name');
-        return null === config("filesystems.disks.$storage_name") ? throw_if(!app()->environment('production'), StorageNotFoundException::class, $storage_name): true; /** @phpstan-ignore-line */
+        return null === config("filesystems.disks.$storage_name") ? throw_if(!app()->environment('production'), StorageNotFoundException::class, $storage_name) : true; /** @phpstan-ignore-line */
 
     }
 
     public function enabled(): bool
     {
-        return config('staticsitegen.enabled')?true:false;
+        return config('staticsitegen.enabled') ? true : false;
     }
     public function cached(): bool
     {
-        return config('staticsitegen.cached')?true:false;
+        return config('staticsitegen.cached') ? true : false;
     }
     public function withInertia(): bool
     {
-        return config('staticsitegen.inertia')?true:false;
+        return config('staticsitegen.inertia') ? true : false;
     }
 
 }
