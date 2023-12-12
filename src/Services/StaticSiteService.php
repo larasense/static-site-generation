@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Response as ResponseFacade;
 use Larasense\StaticSiteGeneration\Jobs\ProcessStaticContent;
 use Illuminate\Support\Facades\Log;
 
+use function config;
+
 class StaticSiteService
 {
     public function checkEnvironment(Request $request): bool
@@ -43,6 +45,7 @@ class StaticSiteService
         }
 
         $metadata->file = $this->getFileInfo($request);
+
         if ($metadata->need_revalidation) {
             return false;
         }
@@ -108,10 +111,10 @@ class StaticSiteService
         return true;
     }
 
-        /**
-         *
-         * @return array<string,mixed>
-         */
+    /**
+     *
+     * @return array<string,mixed>
+     */
     public function getUserInfo(): array
     {
         $user = auth()->user();
